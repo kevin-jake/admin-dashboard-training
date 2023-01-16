@@ -7,6 +7,8 @@ import helmet from "helmet";
 import morgan from "morgan";
 import clientRoutes from "./routes/client.js";
 import generalRoutes from "./routes/general.js";
+import salesRoutes from "./routes/sales.js";
+import managementRoutes from "./routes/management.js";
 
 // CONFIGURATION
 dotenv.config();
@@ -23,3 +25,18 @@ app.use("/client", clientRoutes);
 app.use("/general", generalRoutes);
 app.use("/management", managementRoutes);
 app.use("/sales", salesRoutes);
+
+// MONGOOSE
+const PORT = process.env.PORT;
+mongoose.set("strictQuery", false);
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((res) => {
+    app.listen(PORT, () =>
+      console.log("Mongodb connected at " + res.connection.host)
+    );
+  })
+  .catch((error) => console.log(`${error} did not connect`));
